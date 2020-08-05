@@ -83,3 +83,5 @@ const init = <T>(list: List<T>): List<T> => {
 
 const listEx36 = cons(1, cons(2, cons(3, nil)))
 console.log("Exercise 3.6: ", init(listEx36))
+
+export { }
