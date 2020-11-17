@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "es2018"
+        ],
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "outDir": "lib",
+        "strict": true,
+        "esModuleInterop": true,
+        "target": "ESNext",
+        "module": "CommonJS"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
