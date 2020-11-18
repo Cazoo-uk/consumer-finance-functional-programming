@@ -1,29 +1,29 @@
 import { List } from "../list/list"
 import { reverse } from "../functions/functions"
 
-const foldRight = <A, B>(l: List<A>, z: B, f: (a: A, b: B) => B): B => {
-  switch (l.tag) {
-    case "nil": return z;
-    case "cons": return f(l.head, foldRight(l.tail, z, f));
+const foldRight = <A, B>(inputList: List<A>, injectedValue: B, f: (accumulator: B, listItem: A) => B): B => {
+  switch (inputList.tag) {
+    case "nil": return injectedValue;
+    case "cons": return f(foldRight(inputList.tail, injectedValue, f), inputList.head);
   }
 };
 
-const foldRightWithFoldLeft = <A, B>(l: List<A>, injectedValue: B, f: (accumulator: B, listItem: A) => B): B => {
-  return foldLeft(reverse(l), injectedValue, f);
+const foldRightWithFoldLeft = <A, B>(inputList: List<A>, injectedValue: B, f: (accumulator: B, listItem: A) => B): B => {
+  return foldLeft(reverse(inputList), injectedValue, f);
 }
 
-const foldLeftRecursive = <A, B>(l: List<A>, z: B, f: (a: A, b: B) => B): B => {
-  switch (l.tag) {
+const foldLeftRecursive = <A, B>(inputList: List<A>, z: B, f: (accumulator: B, listItem: A) => B): B => {
+  switch (inputList.tag) {
     case "nil": return z;
-    case "cons": return f(l.head, foldLeftRecursive(l.tail, z, f));
+    case "cons": return f(foldLeftRecursive(inputList.tail, z, f), inputList.head);
   }
 };
 
-const foldLeft = <A, B>(l: List<A>, injectedValue: B, f: (accumulator: B, listItem: A) => B): B => {
+const foldLeft = <A, B>(inputList: List<A>, injectedValue: B, f: (accumulator: B, listItem: A) => B): B => {
   let state = injectedValue;
-  while (l.tag !== "nil") {
-    state = f(state, l.head);
-    l = l.tail;
+  while (inputList.tag !== "nil") {
+    state = f(state, inputList.head);
+    inputList = inputList.tail;
   }
   return state;
 };

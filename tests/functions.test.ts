@@ -1,6 +1,6 @@
-import { list } from "../src/list/list"
+import { list, List } from "../src/list/list"
 import { init, reverse, tail } from "../src/functions/functions"
-import { foldRightWithFoldLeft } from "../src/fold/fold"
+import { foldRight, foldRightWithFoldLeft } from "../src/fold/fold"
 
 describe('tail', () => {
   it('should return the tail', () => {
@@ -16,12 +16,22 @@ describe('init', () => {
 
 describe('reverse', () => {
   it('should revert the list', () => {
-    expect(reverse(list(1,2,3,4,5,6))).toEqual(list(6,5,4,3,2,1));
+    expect(reverse(list(1, 2, 3))).toEqual(list(3, 2, 1));
   });
 });
 
 describe('foldRightWithFoldLeft', () => {
     it('should work as expected', () => {
-      expect(foldRightWithFoldLeft(list(1,2,3,4,5,6), 0, (acc, item) => { return acc + item})).toEqual(21);
+      expect(foldRightWithFoldLeft(list(1,2,3,4,5,6), '', (acc, item) => { return `${acc}` + `${item}`})).toEqual('654321');
     });
+});
+
+describe('foldLeftWithFoldRight', () => {
+  const foldLeftWithFoldRight = <A, B>(l: List<A>, injectedValue: B, f: (accumulator: B, listItem: A) => B): B => {
+    return foldRight(reverse(l), injectedValue, f);
+  }
+
+  it('should work as expected', () => {
+    expect(foldLeftWithFoldRight(list(1,2,3,4,5,6), '', (acc, item) => { return `${acc}` + `${item}`})).toEqual('123456');
+  });
 });

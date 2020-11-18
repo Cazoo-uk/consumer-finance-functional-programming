@@ -30,15 +30,19 @@ const init = <A>(l: List<A>): List<A> =>
     cons(l.head, init(l.tail))
 
 const reverse = <A>(inputList: List<A>): List<A> => {
-  return foldLeft(inputList, list(), (acc, current) => {
-    return cons(current, acc)
-  })
+  return foldLeft(inputList, list(), flip(cons));
 }
 
 const length = <A>(list: List<A>): number => {
-  return foldRight(list, 0, (_a, b) => {
-    return b + 1;
+  return foldRight(list, 0, a => {
+    return a + 1;
   })
+}
+
+const flip = <A, B, TReturn>(fn: (a: A, b: B) => TReturn) => {
+  return (c: B, d: A) => {
+    return fn(d, c);
+  }
 }
 
 export {
@@ -48,5 +52,6 @@ export {
   dropWhile,
   drop,
   setHead,
-  tail
+  tail,
+  flip
 }
