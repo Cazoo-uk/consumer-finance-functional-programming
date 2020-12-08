@@ -3,7 +3,7 @@ export type Tree<A> = Leaf<A> | Branch<A>;
 export type Leaf<T> = {
     type: "leaf";
     value: T
-}
+} 
 
 export const isLeaf = <T>(tree: Tree<T>): tree is Leaf<T> => {
   return tree.type === 'leaf'
