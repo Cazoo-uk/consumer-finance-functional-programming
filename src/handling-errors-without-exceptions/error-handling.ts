@@ -7,7 +7,9 @@ abstract class OptionBase<A> {
   abstract map<B>(this: Option<A>, f: (a: A) => B): Option<B>;
 
   abstract getOrElse<A>(this: Option<A>, onNone: () => A): A
-
+  abstract filter(this: Option<A>, p: (a: A) => boolean): Option<A>;
+  abstract flatMap<B>(this: Option<A>, f: (a: A) => Option<B>): Option<B>;
+  abstract orElse<A>(this: Option<A>, ou: () => Option<A>): Option<A>;
 }
 
 // 5. `extends` keyword creating inheritance relationship
@@ -23,9 +25,22 @@ export class Some<A> extends OptionBase<A> {
     return new Some(f(this.value));
   };
 
-  getOrElse<A>(this: Some<A>, onNone: () => A): A {
+  getOrElse<A>(this: Some<A>, _onNone: () => A): A {
       return this.value;
   };
+
+  filter(this: Some<A>, p: (a: A) => boolean): Option<A> {
+    return p(this.value) ? this : none<A>();
+  };
+
+  
+  flatMap<B>(this: Some<A>, f: (a: A) => Option<B>): Option<B> {
+    return f(this.value);
+  };
+
+  orElse<A>(this: Option<A>, _ou: () => Option<A>): Option<A> {
+    return this;
+  }
 }
 
 export class None<A> extends OptionBase<A> {
@@ -46,7 +61,19 @@ export class None<A> extends OptionBase<A> {
 
   getOrElse<A>(this: None<A>, onNone: () => A): A {
     return onNone();
-};
+  };
+
+  filter<A>(this: None<A>, _p: (a: A) => boolean): Option<A> {
+    return none();
+  };
+
+  flatMap<B>(this: None<A>, _f: (a: A) => Option<B>): Option<B> {
+    return none();
+  };
+
+  orElse<A>(this: Option<A>, ou: () => Option<A>): Option<A> {
+    return ou();
+  }
 }
 
 // 10. smart constructors for `None` and `Some`

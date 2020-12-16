@@ -18,3 +18,44 @@ describe('Option getOrElse', () => {
         expect(option.getOrElse(() => 0)).toEqual(0)
     })
 })
+
+describe('Option filter', () => {
+    it('should return none if the value in the option is not fulfilling the predicate', () => {               
+        const option = new Some(1);
+        expect(option.filter((value) => value === 0)).toEqual(none<number>())    
+    });
+
+    it('should return the option if the value in the option is fulfilling the predicate', () => {               
+        const option = new Some(1);
+        expect(option.filter((value) => value === 1)).toBe(option);    
+    })
+
+    it('should return none if the option is none', () => {               
+        const option = none();
+        expect(option.filter((value) => value === 1)).toBe(none());    
+    })
+})
+
+describe('Option flatmap', () => {
+    it('should map to another option for an option', () => {               
+        const option = new Some(1);
+        expect(option.flatMap((value) => new Some(value.toString()))).toEqual(new Some('1'))    
+    });
+
+    it('should map to none for none', () => {               
+        const option = none<number>();
+        expect(option.flatMap((value) => new Some(value.toString()))).toEqual(none<number>());   
+    });
+})
+
+describe('Option orElse', () => {
+    it('should return an option of 99 for none', () => {               
+        const option = none();
+        expect(option.orElse(() => new Some(99))).toEqual(new Some(99))    
+    });
+
+    it('should return the existing option for a some', () => {               
+        const option = new Some(2);
+        expect(option.orElse(() => new Some(99))).toEqual(new Some(2))    
+    });
+})
