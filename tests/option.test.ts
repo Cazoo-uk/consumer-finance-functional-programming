@@ -76,7 +76,7 @@ describe('Variance', () => {
         }
 
         const variance = (list: List<number>): Option<number> => {
-            return mean(list).flatMap((value: number) => mean(map(list, (item) => Math.pow(item - value, 2))));
+            return mean(list).flatMap(average => mean(map(list, (item) => Math.pow(item - average, 2))));
         }
 
         const _list = list(1, 2);
