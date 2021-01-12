@@ -26,7 +26,7 @@ export class Some<A> extends OptionBase<A> {
   };
 
   getOrElse<A>(this: Some<A>, _onNone: () => A): A {
-      return this.value;
+    return this.value;
   };
 
   filter(this: Some<A>, p: (a: A) => boolean): Option<A> {

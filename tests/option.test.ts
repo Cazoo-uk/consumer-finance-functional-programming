@@ -1,4 +1,8 @@
-import { Some, None, none } from '../src/handling-errors-without-exceptions/error-handling'
+import { foldRight } from '../src/fold/fold';
+import { length, sum, map } from '../src/functions/functions';
+import { Some, None, none, Option } from '../src/handling-errors-without-exceptions/error-handling'
+import { list, List } from '../src/list/list';
+
 describe('Option map', () => {
     it('should map the value', () => {               
         const option = new Some(1);
@@ -59,3 +63,44 @@ describe('Option orElse', () => {
         expect(option.orElse(() => new Some(99))).toEqual(new Some(2))    
     });
 })
+
+describe('Variance', () => {
+
+    it('should work', () => {
+        const mean = (list: List<number>): Option<number> => {
+            if (list.tag === "nil") {
+                return none();
+            }
+
+            return new Some(sum(list) / length(list));
+        }
+
+    
+        const variance = (list: List<number>): Option<number> => {
+            const average = sum(list) / length(list);
+
+            const listOfSquarredDistances = map(list, (value) => {
+                return Math.pow(value - average, 2)
+            })
+            
+            mean(list).flatMap((flatMapValue) => {
+                return map(list, (value) => {
+                    return Math.pow(value - flatMapValue, 2)
+                })
+            })
+
+            mean(list).flatMap()
+            return new Some(foldRight(list, 0, (accumulator, value) => {
+                return accumulator + Math.pow(value - average, 2)
+            }) / length(list))
+        }
+
+        const _list = list(1, 2);
+        const expectedOption = new Some(0.25)
+        expect(variance(_list)).toStrictEqual(expectedOption);
+    })
+})
+
+
+
+

@@ -1,5 +1,5 @@
 import { list, List } from "../src/list/list"
-import { init, reverse, tail } from "../src/functions/functions"
+import { init, reverse, tail, map } from "../src/functions/functions"
 import { foldRight, foldRightWithFoldLeft } from "../src/fold/fold"
 
 describe('tail', () => {
@@ -33,5 +33,12 @@ describe('foldLeftWithFoldRight', () => {
 
   it('should work as expected', () => {
     expect(foldLeftWithFoldRight(list(1,2,3,4,5,6), '', (acc, item) => { return `${acc}` + `${item}`})).toEqual('123456');
+  });
+});
+
+
+describe('map', () => {
+  it('should work as expected', () => {
+    expect(map(list(1,2,3), (value) => { return `${value}`})).toEqual(list('1', '2', '3'));
   });
 });

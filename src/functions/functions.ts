@@ -45,6 +45,20 @@ const flip = <A, B, TReturn>(fn: (a: A, b: B) => TReturn) => {
   }
 }
 
+const sum = (list: List<number>): number => {
+  return foldRight(list, 0, (accumulator, value) => {
+    return accumulator + value
+  })
+}
+
+const map = <TValue, TReturnValue>(
+    _list: List<TValue>, 
+    fn: (a: TValue) => TReturnValue): List<TReturnValue> => {
+  return foldRight(_list, list(), (accumulator, listItem) => {
+      return cons(fn(listItem), accumulator)
+  })
+}
+
 export {
   length,
   reverse,
@@ -53,5 +67,7 @@ export {
   drop,
   setHead,
   tail,
-  flip
+  flip,
+  sum,
+  map
 }
