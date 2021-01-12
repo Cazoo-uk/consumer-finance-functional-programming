@@ -2,6 +2,7 @@ import { list, List } from "../list/list"
 import { isNil, nil } from "../nil/nil"
 import { cons } from "../cons/cons"
 import { foldLeft, foldRight } from "../fold/fold"
+import { none, Option, Some } from "../handling-errors-without-exceptions/option"
 
 const tail = <T>(list: List<T>): List<T> => {
   if (!isNil(list)) {
@@ -52,12 +53,17 @@ const sum = (list: List<number>): number => {
 }
 
 const map = <TValue, TReturnValue>(
-    _list: List<TValue>, 
+    _list: List<TValue>,
     fn: (a: TValue) => TReturnValue): List<TReturnValue> => {
   return foldRight(_list, list(), (accumulator, listItem) => {
       return cons(fn(listItem), accumulator)
   })
 }
+
+export const mean = (list: List<number>): Option<number> =>
+  (list.tag === "nil")
+    ? none()
+    : new Some(sum(list) / length(list));
 
 export {
   length,

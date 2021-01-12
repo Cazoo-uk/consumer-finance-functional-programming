@@ -1,4 +1,4 @@
-import { length, map, sum } from "../src/functions/functions"
+import { map, mean } from "../src/functions/functions"
 import { none, Option, Some } from "../src/handling-errors-without-exceptions/option"
 import { list, List } from "../src/list/list"
 
@@ -47,15 +47,13 @@ describe('Option flatmap', () => {
 
     it('should map to none for none', () => {
         const option = none<number>();
-        // @ts-ignore
         expect(option.flatMap((value) => new Some(value.toString()))).toEqual(none<number>());
     });
 })
 
 describe('Option orElse', () => {
     it('should return an option of 99 for none', () => {
-        const option = none();
-        // @ts-ignore
+        const option = none<number>();
         expect(option.orElse(() => new Some(99))).toEqual(new Some(99))
     });
 
@@ -67,26 +65,11 @@ describe('Option orElse', () => {
 
 describe('Variance', () => {
     it('should work', () => {
-        const mean = (list: List<number>): Option<number> => {
-            if (list.tag === "nil") {
-                return none();
-            }
+        const variance = (list: List<number>): Option<number> =>
+             mean(list).flatMap(average => mean(map(list, (item) => Math.pow(item - average, 2))));
 
-            return new Some(sum(list) / length(list));
-        }
-
-        const variance = (list: List<number>): Option<number> => {
-            return mean(list).flatMap(average => mean(map(list, (item) => Math.pow(item - average, 2))));
-        }
-
-        const _list = list(1, 2);
-        const expectedOption = new Some(0.25)
-        expect(variance(_list)).toStrictEqual(expectedOption);
-        const listOfUnknown = list<number>();
-        expect(variance(listOfUnknown)).toStrictEqual(none<number>());
+        expect(variance(list(1, 2))).toStrictEqual(new Some(0.25));
+        expect(variance(list(1, 2, 3, 4, 5))).toStrictEqual(new Some(2));
+        expect(variance(list<number>())).toStrictEqual(none<number>());
     })
 })
-
-
-
-
