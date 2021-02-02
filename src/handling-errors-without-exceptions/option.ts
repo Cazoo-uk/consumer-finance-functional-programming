@@ -1,5 +1,14 @@
 export type Option<A> = Some<A> | None<A>;
 
+export const map2 = <A, B, C>(oa: Option<A>,
+                       ob: Option<B>,
+                       f: (a: A, b: B) => C): Option<C> => {
+
+  return oa.flatMap( a => ob.map(b => f(a, b)));
+}
+export const lift = <A, B>(f: (a: A) => B): (o: Option<A>) => Option<B> =>
+  o => o.map(f);
+
 abstract class OptionBase<A> {
   filter(this: Option<A>, p: (a: A) => boolean): Option<A> {
     return this.flatMap(a => p(a) ? some(a) : none());

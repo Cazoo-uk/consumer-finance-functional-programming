@@ -65,6 +65,9 @@ export const mean = (list: List<number>): Option<number> =>
     ? none()
     : new Some(sum(list) / length(list));
 
+export const variance = (list: List<number>): Option<number> =>
+  mean(list).flatMap(average => mean(map(list, (item) => Math.pow(item - average, 2))));
+
 export {
   length,
   reverse,

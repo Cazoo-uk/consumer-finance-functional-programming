@@ -1,6 +1,6 @@
-import { map, mean } from "../src/functions/functions"
-import { none, Option, Some } from "../src/handling-errors-without-exceptions/option"
-import { list, List } from "../src/list/list"
+import { variance } from "../src/functions/functions"
+import { none, Some, map2 } from "../src/handling-errors-without-exceptions/option"
+import { list } from "../src/list/list"
 
 describe('Option map', () => {
     it('should map the value', () => {
@@ -30,7 +30,7 @@ describe('Option filter', () => {
 
     it('should return the option if the value in the option is fulfilling the predicate', () => {
         const option = new Some(1);
-        expect(option.filter((value) => value === 1)).toBe(option);
+        expect(option.filter((value) => value === 1)).toEqual(option);
     })
 
     it('should return none if the option is none', () => {
@@ -65,11 +65,35 @@ describe('Option orElse', () => {
 
 describe('Variance', () => {
     it('should work', () => {
-        const variance = (list: List<number>): Option<number> =>
-             mean(list).flatMap(average => mean(map(list, (item) => Math.pow(item - average, 2))));
-
         expect(variance(list(1, 2))).toStrictEqual(new Some(0.25));
         expect(variance(list(1, 2, 3, 4, 5))).toStrictEqual(new Some(2));
         expect(variance(list<number>())).toStrictEqual(none<number>());
     })
+})
+
+describe('map2', () => {
+    const aFunction = (a: number, b: number): string => {
+        return `${a}${b}`;
+    }
+    const option1 = new Some(1);
+    const option2 = new Some(2);
+    const optionNone = none<number>();
+
+    it('should apply function if both parameters are valid', () => {
+        const result = map2(option1, option2, aFunction);
+
+        expect(result).toEqual(new Some("12"));
+    });
+
+    it('should return None if first parameter is None', () => {
+        const result = map2(optionNone, option2, aFunction);
+
+        expect(result).toEqual(none());
+    });
+
+    it('should return None if second parameter is None', () => {
+        const result = map2(option1, optionNone, aFunction);
+
+        expect(result).toEqual(none());
+    });
 })
