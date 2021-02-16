@@ -1,5 +1,5 @@
 import { variance } from "../src/functions/functions"
-import { none, Some, map2 } from "../src/handling-errors-without-exceptions/option"
+import { none, Some, map2, Option } from "../src/handling-errors-without-exceptions/option"
 import { list } from "../src/list/list"
 
 describe('Option map', () => {
@@ -96,4 +96,33 @@ describe('map2', () => {
 
         expect(result).toEqual(none());
     });
+})
+
+describe('lift2', () => {
+
+    it('should work', () => {
+        const opt1 = new Some(2);
+        const opt2 = new Some(4);
+        const aFunction = (a: number, b: number): string => {
+            return `${a}${b}`;
+        }
+
+        const aFunctionWithOptions = (opta: Option<number>, optb: Option<number>): Option<string> => {
+            return map2(opta, optb, aFunction)
+        };
+
+        expect(aFunctionWithOptions(opt1, opt2)).toEqual(new Some('24'))
+
+
+        type Lift2 = <TFirstArgument, TSecondArgument, TReturnValue>
+                    (fn:(a: TFirstArgument, b: TSecondArgument) => TReturnValue) =>
+                    (a: Option<TFirstArgument>, b: Option<TSecondArgument>) => Option<TReturnValue>
+
+        const lift2: Lift2 = (fn) => (a, b) => map2(a, b, fn)
+
+        const aFunctionLifted = lift2(aFunction);
+
+
+        expect(aFunctionLifted(opt1, opt2)).toEqual(new Some('24'))
+    })
 })

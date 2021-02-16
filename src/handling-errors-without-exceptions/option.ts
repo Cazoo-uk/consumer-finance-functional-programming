@@ -1,8 +1,8 @@
 export type Option<A> = Some<A> | None<A>;
 
-export const map2 = <A, B, C>(oa: Option<A>,
-                       ob: Option<B>,
-                       f: (a: A, b: B) => C): Option<C> => {
+export const map2 = <Arg1, Arg2, ReturnValue>(oa: Option<Arg1>,
+                       ob: Option<Arg2>,
+                       f: (a: Arg1, b: Arg2) => ReturnValue): Option<ReturnValue> => {
 
   return oa.flatMap( a => ob.map(b => f(a, b)));
 }
