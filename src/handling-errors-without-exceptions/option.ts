@@ -6,6 +6,13 @@ export const map2 = <A, B, C>(oa: Option<A>,
 
   return oa.flatMap( a => ob.map(b => f(a, b)));
 }
+
+export const map3 = <A, B, C, D>(oa: Option<A>,
+                              ob: Option<B>,
+                              oc: Option<C>,
+                              f: (a: A, b: B, c:C) => D): Option<D> => {
+return oa.flatMap(a=> ob.flatMap(b=>oc.map(c=>f(a,b,c))));
+}
 export const lift = <A, B>(f: (a: A) => B): (o: Option<A>) => Option<B> =>
   o => o.map(f);
 
